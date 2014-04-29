@@ -29,7 +29,19 @@ class FantaPaginatorAdapter implements AdapterInterface
     }
 
     /**
-     * Returns Facets
+     * Returns Aggregations
+     *
+     * @return mixed
+     *
+     * @api
+     */
+    public function getAggregations()
+    {
+        return $this->adapter->getAggregations();
+    }
+
+    /**
+     * Returns Aggregations
      *
      * @return mixed
      *
