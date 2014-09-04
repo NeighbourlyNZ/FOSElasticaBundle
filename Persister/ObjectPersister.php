@@ -31,6 +31,17 @@ class ObjectPersister implements ObjectPersisterInterface
         $this->fields          = $fields;
     }
 
+    /**
+     * If the ObjectPersister handles a given object.
+     *
+     * @param object $object
+     * @return bool
+     */
+    public function handlesObject($object)
+    {
+        return $object instanceof $this->objectClass;
+    }
+
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -60,8 +71,7 @@ class ObjectPersister implements ObjectPersisterInterface
      */
     public function insertOne($object)
     {
-        $document = $this->transformToElasticaDocument($object);
-        $this->type->addDocument($document);
+        $this->insertMany(array($object));
     }
 
     /**
@@ -72,11 +82,7 @@ class ObjectPersister implements ObjectPersisterInterface
      **/
     public function replaceOne($object)
     {
-        $document = $this->transformToElasticaDocument($object);
-        try {
-            $this->type->deleteById($document->getId());
-        } catch (NotFoundException $e) {}
-        $this->type->addDocument($document);
+        $this->replaceMany(array($object));
     }
 
     /**
@@ -87,10 +93,7 @@ class ObjectPersister implements ObjectPersisterInterface
      **/
     public function deleteOne($object)
     {
-        $document = $this->transformToElasticaDocument($object);
-        try {
-            $this->type->deleteById($document->getId());
-        } catch (NotFoundException $e) {}
+        $this->deleteMany(array($object));
     }
 
     /**
@@ -102,9 +105,7 @@ class ObjectPersister implements ObjectPersisterInterface
      **/
     public function deleteById($id)
     {
-        try {
-            $this->type->deleteById($id);
-        } catch (NotFoundException $e) {}
+        $this->deleteManyByIdentifiers(array($id));
     }
 
     /**
