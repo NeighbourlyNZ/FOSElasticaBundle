@@ -210,7 +210,7 @@ class FOSElasticaExtension extends Extension
             $typeId = sprintf('%s.%s', $indexConfig['reference'], $name);
             $typeDef = new DefinitionDecorator('fos_elastica.type_prototype');
             $typeDef->replaceArgument(0, $name);
-            $typeDef->setFactoryService($indexConfig['reference']);
+            $typeDef->setFactoryService((string) $indexConfig['reference']);
             $container->setDefinition($typeId, $typeDef);
 
             $typeConfig = array(
